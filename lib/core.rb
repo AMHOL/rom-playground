@@ -1,15 +1,16 @@
 require 'core/concerns/configurable'
+require 'rom/test'
 
 module Core
   extend Concerns::Configurable
   extend self
 
-  setting :adapter, :memory
+  setting :adapter, :test
 
   def setup
     ROM.setup(config.adapter)
     %w(models relations mappers commands).each do |file|
-      require_relative "core/#{file}"
+      require "core/#{file}"
     end
     self
   end

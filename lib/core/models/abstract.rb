@@ -14,7 +14,6 @@ module Core
 
         private
 
-
         def define_attribute(attribute, reader: nil, writer: nil)
           attr_reader attribute unless reader.nil?
           attr_writer attribute unless writer.nil?
