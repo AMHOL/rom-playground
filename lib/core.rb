@@ -1,11 +1,10 @@
 require 'core/concerns/configurable'
-require 'rom/test'
 
 module Core
   extend Concerns::Configurable
   extend self
 
-  setting :adapter, :test
+  setting :adapter, :memory
 
   def setup
     ROM.setup(config.adapter)
