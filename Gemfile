@@ -2,8 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rom', '~> 0.6.0.beta3'
-gem 'rom-sql', '~> 0.4.0.beta2'
+gem 'rom', '~> 0.6.0.rc1'
 
 group :tools do
   gem 'rubocop'

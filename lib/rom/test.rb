@@ -3,7 +3,11 @@ require 'rom/memory'
 
 module ROM
   module Test
-    class Dataset < ROM::Memory::Dataset
+    class Dataset < ROM::Memory::Dataset; end
+
+    class Relation < ROM::Relation
+      include Enumerable
+
       OPERATOR_MAPPING = {
         eq: proc { |tuple, field, value| tuple[field].eql?(value) },
         neq: proc { |tuple, field, value| !tuple[field].eql?(value) },
@@ -14,17 +18,21 @@ module ROM
         regexp: proc { |tuple, field, value| tuple[field] =~ value }
       }
 
-      forward :drop, :take
+      # forward :project, :order
 
-      def filter(field, value, operator: :eq)
-        find_all do |tuple|
+      def filter(field, operator, value)
+        dataset.find_all do |tuple|
           OPERATOR_MAPPING[operator].call(tuple, field, value)
         end
       end
-    end
 
-    class Relation < ROM::Relation
-      include Enumerable
+      def offset(offset)
+        dataset.drop(offset)
+      end
+
+      def limit(limit)
+        dataset.take(limit)
+      end
 
       def insert(*args)
         dataset.insert(*args)
@@ -36,19 +44,15 @@ module ROM
         dataset.delete(*args)
         self
       end
-    end
 
-    class Storage < ROM::Memory::Storage
-      def create_dataset(name)
-        data[name] = Dataset.new(ThreadSafe::Array.new)
+      def count
+        dataset.count
       end
     end
 
-    class Repository < ROM::Memory::Repository
-      def initialize
-        @connection = Storage.new
-      end
-    end
+    class Storage < ROM::Memory::Storage; end
+
+    class Repository < ROM::Memory::Repository; end
 
     module Commands
       class Create < ROM::Memory::Commands::Create; end
