@@ -4,16 +4,16 @@ module Core
       module Queryable
         module Memory
           OPERATOR_MAP = {
-            eq: lambda { |tuple, field, value| tuple[field].eql?(value) },
-            neq: lambda { |tuple, field, value| !tuple[field].eql?(value) },
-            lt: lambda { |tuple, field, value| tuple[field] < value },
-            lteq: lambda { |tuple, field, value| tuple[field] <= value },
-            gt: lambda { |tuple, field, value| tuple[field] > value },
-            gteq: lambda { |tuple, field, value| tuple[field] >= value }
+            eq: ->(tuple, field, value) { tuple[field].eql?(value) },
+            neq: ->(tuple, field, value) { !tuple[field].eql?(value) },
+            lt: ->(tuple, field, value) { tuple[field] < value },
+            lteq: ->(tuple, field, value) { tuple[field] <= value },
+            gt: ->(tuple, field, value) { tuple[field] > value },
+            gteq: ->(tuple, field, value) { tuple[field] >= value }
           }
 
           def filter(field, operator, value)
-            __new__(dataset.find_all { |tuple|
+            __new__(dataset.select { |tuple|
               OPERATOR_MAP[operator].call(tuple, field.to_sym, value)
             })
           end

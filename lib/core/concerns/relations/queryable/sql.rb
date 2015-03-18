@@ -4,12 +4,12 @@ module Core
       module Queryable
         module Sql
           OPERATOR_MAP = {
-            eq: lambda { |field, value| [field => value] },
-            neq: lambda { |field, value| ["#{field} != ?", value] },
-            lt: lambda { |field, value| ["#{field} < ?", value] },
-            lteq: lambda { |field, value| ["#{field} <= ?", value] },
-            gt: lambda { |field, value| ["#{field} > ?", value] },
-            gteq: lambda { |field, value| ["#{field} >= ?", value] }
+            eq: ->(field, value) { [field => value] },
+            neq: ->(field, value) { ["#{field} != ?", value] },
+            lt: ->(field, value) { ["#{field} < ?", value] },
+            lteq: ->(field, value) { ["#{field} <= ?", value] },
+            gt: ->(field, value) { ["#{field} > ?", value] },
+            gteq: ->(field, value) { ["#{field} >= ?", value] }
           }
 
           def filter(field, operator, value)
