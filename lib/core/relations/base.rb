@@ -1,13 +1,6 @@
-require 'rom'
-require 'rom/memory'
-
-module ROM
-  module Test
-    class Dataset < ROM::Memory::Dataset; end
-
-    class Relation < ROM::Relation
-      include Enumerable
-
+module Core
+  module Relations
+    class Base < ROM::Relation[Core.config.adapter]
       OPERATOR_MAPPING = {
         eq: proc { |tuple, field, value| tuple[field].eql?(value) },
         neq: proc { |tuple, field, value| !tuple[field].eql?(value) },
@@ -55,17 +48,5 @@ module ROM
         dataset.count
       end
     end
-
-    class Storage < ROM::Memory::Storage; end
-
-    class Repository < ROM::Memory::Repository; end
-
-    module Commands
-      class Create < ROM::Memory::Commands::Create; end
-      class Update < ROM::Memory::Commands::Update; end
-      class Delete < ROM::Memory::Commands::Delete; end
-    end
   end
 end
-
-ROM.register_adapter(:test, ROM::Test)

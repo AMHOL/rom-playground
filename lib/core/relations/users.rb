@@ -1,7 +1,6 @@
 module Core
   module Relations
-    class Users < ROM::Relation[Core.config.adapter]
-      include Core::Concerns::Relations::Queryable
+    class Users < Base
       dataset :users
     end
   end
