@@ -4,18 +4,13 @@ module Core
       module Queryable
         module Memory
           OPERATOR_MAP = {
-            eq: proc { |tuple, field, value| tuple[field].eql?(value) },
-            neq: proc { |tuple, field, value| !tuple[field].eql?(value) },
-            lt: proc { |tuple, field, value| tuple[field] < value },
-            lteq: proc { |tuple, field, value| tuple[field] <= value },
-            gt: proc { |tuple, field, value| tuple[field] > value },
-            gteq: proc { |tuple, field, value| tuple[field] >= value },
-            regexp: proc { |tuple, field, value| tuple[field] =~ value }
+            eq: lambda { |tuple, field, value| tuple[field].eql?(value) },
+            neq: lambda { |tuple, field, value| !tuple[field].eql?(value) },
+            lt: lambda { |tuple, field, value| tuple[field] < value },
+            lteq: lambda { |tuple, field, value| tuple[field] <= value },
+            gt: lambda { |tuple, field, value| tuple[field] > value },
+            gteq: lambda { |tuple, field, value| tuple[field] >= value }
           }
-
-          def project(*fields)
-            __new__(dataset.project(*fields))
-          end
 
           def filter(field, operator, value)
             __new__(dataset.find_all { |tuple|

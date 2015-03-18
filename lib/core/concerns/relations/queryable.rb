@@ -1,4 +1,5 @@
 require 'core/concerns/relations/queryable/memory'
+require 'core/concerns/relations/queryable/sql'
 
 module Core
   module Concerns

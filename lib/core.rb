@@ -4,14 +4,24 @@ module Core
   extend Concerns::Configurable
   extend self
 
-  setting :adapter, :memory
+  attr_reader :env, :setup
+  private :env, :setup
 
-  def setup
-    ROM.setup(config.adapter)
+  setting :adapter, :memory
+  setting :dsn, nil
+  setting :options, nil
+
+  def load
+    @setup = ROM.setup(*config.to_h.values_at(:adapter, :dsn, :options).compact)
+    require 'core/db/migrations' if %i(sql).include?(config.adapter)
     %w(models relations mappers commands).each do |file|
       require "core/#{file}"
     end
     self
+  end
+
+  def connection
+    setup.default.connection
   end
 
   def finalize
@@ -29,8 +39,4 @@ module Core
   def respond_to_missing?(method, include_private = false)
     env.respond_to?(method, include_private) || super
   end
-
-  private
-
-  attr_reader :env
 end
