@@ -16,31 +16,32 @@ module Core
           regexp: proc { |tuple, field, value| tuple[field] =~ value }
         }
 
-        def project(*args, &block)
-          dataset.project(*args, &block)
-          self
+        def project(*fields)
+          __new__(dataset.project(*fields))
         end
 
         def filter(field, operator, value)
-          dataset.find_all do |tuple|
-            OPERATOR_MAPPING[operator].call(tuple, field, value)
-          end
-          self
+          __new__(dataset.find_all { |tuple|
+            OPERATOR_MAPPING[operator].call(tuple, field.to_sym, value)
+          })
         end
 
-        def order(*args, &block)
-          dataset.order(*args, &block)
-          self
+        def order(field, direction = nil)
+          __new__(dataset.sort { |a, b|
+            if direction == :desc
+              b[field] <=> a[field]
+            else
+              a[field] <=> b[field]
+            end
+          })
         end
 
         def offset(offset)
-          dataset.drop(offset)
-          self
+          __new__(dataset.drop(offset))
         end
 
         def limit(limit)
-          dataset.take(limit)
-          self
+          __new__(dataset.take(limit))
         end
 
         def count
