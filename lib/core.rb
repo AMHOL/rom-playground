@@ -1,3 +1,4 @@
+require 'rom'
 require 'core/concerns/configurable'
 
 module Core
