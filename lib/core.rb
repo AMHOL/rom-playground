@@ -15,7 +15,7 @@ module Core
   def load
     @setup = ROM.setup(*config.to_h.values_at(:adapter, :dsn, :options).compact)
     require 'core/db/migrations' if %i(sql).include?(config.adapter)
-    %w(models relations mappers commands).each do |file|
+    %w(models validators relations mappers commands).each do |file|
       require "core/#{file}"
     end
     self

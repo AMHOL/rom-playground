@@ -4,6 +4,11 @@ module Core
       register_as :create
       relation :users
       result :one
+      validator Core::Validators::User
+
+      def execute(user)
+        super({ id: SecureRandom.uuid }.merge(user))
+      end
     end
   end
 end

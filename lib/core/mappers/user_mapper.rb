@@ -6,6 +6,7 @@ module Core
 
       model Core::Models::User
 
+      attribute :id
       attribute :name
       attribute :email
     end
